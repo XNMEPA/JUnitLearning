@@ -10,7 +10,7 @@ public class User {
     private int age;
     private Sex sex;
 
-    private static Map<Integer, User> allUsers;
+    private static Map<Integer, User> allUsers = new HashMap<>();
     private static int countId = 0;
 
     public static void main(String[] args) {
@@ -18,6 +18,9 @@ public class User {
         new User("Евгений", 35, Sex.MALE);
         new User("Марина", 34, Sex.FEMALE);
         new User("Алина", 7, Sex.FEMALE);
+        new User("", 0, null);
+        new User(null, 0, null);
+
 
 
         System.out.println("Все пользователи:");
@@ -42,16 +45,21 @@ public class User {
     }
 
     public User(String name, int age, Sex sex) {
-        if (allUsers == null) allUsers = new HashMap<>();
+        if (name != null && !name.isEmpty() && age > 0 && sex != null) {
+            this.name = name;
+            this.age = age;
+            this.sex = sex;
 
-        this.name = name;
-        this.age = age;
-        this.sex = sex;
-
-        if (!hasUser()) {
-            id = ++countId;
-            allUsers.put(id, this);
+            if (!hasUser()) {
+                id = ++countId;
+                allUsers.put(id, this);
+            }
         }
+    }
+
+    public static void delUsers() {
+        allUsers.clear();
+        countId = 0;
     }
 
     public String getName() {
@@ -111,7 +119,7 @@ public class User {
 
     private boolean hasUser() {
         for (User user : allUsers.values())
-            if(this.equals(user) && this.hashCode() == user.hashCode()) return true;
+            if(user.equals(this) && user.hashCode() == this.hashCode()) return true;
         return false;
     }
 
